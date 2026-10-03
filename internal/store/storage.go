@@ -7,11 +7,11 @@ import (
 
 type Storage struct {
 	Posts interface {
-		Create(ctx context.Context) error
+		Create(ctx context.Context, post *Post) error
 	}
 
 	User interface {
-		Create(ctx context.Context) error
+		Create(ctx context.Context, user *User) error
 	}
 }
 
