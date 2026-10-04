@@ -23,13 +23,12 @@ func main() {
 
 	db, err := db.New(cfg.dbConfig.addr, cfg.dbConfig.maxOpenConns, cfg.dbConfig.maxIdleConns, cfg.dbConfig.maxIdleTime)
 	if err != nil {
-		log.Panic(err)
+		log.Fatal(err)
 	}
+	defer db.Close()
 	fmt.Println("Database connection establish")
 
 	store := store.NewStorage(db)
-
-	defer db.Close()
 
 	app := &application{
 		config: cfg,
