@@ -38,6 +38,10 @@ func (app *application) mount() *chi.Mux {
 	// r.Group()
 	r.Route("/v1", func(r chi.Router) {
 		r.Get("/health", app.healthHandler)
+
+		r.Route("/posts", func(r chi.Router) {
+			r.Post("/", app.CreatePostHandler)
+		})
 	})
 
 	return r
