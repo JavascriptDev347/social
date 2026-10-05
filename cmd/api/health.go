@@ -1,8 +1,18 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+)
+
+var version string = "0.0.1"
 
 func (app *application) healthHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("OK"))
 
+	data := map[string]string{
+		"status":  "OK",
+		"version": version,
+	}
+	if err := writeJSON(w, http.StatusOK, data); err != nil {
+		writeJSONError(w, http.StatusInternalServerError, err.Error())
+	}
 }
