@@ -15,7 +15,7 @@ type CreatePostPayload struct {
 	Tags    []string `json:"tags"`
 }
 
-func (app *application) CreatePostHandler(w http.ResponseWriter, r *http.Request) {
+func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	var payload CreatePostPayload
 	if err := readJSON(w, r, &payload); err != nil {
@@ -44,7 +44,7 @@ func (app *application) CreatePostHandler(w http.ResponseWriter, r *http.Request
 	}
 }
 
-func (app *application) GetPostHandler(w http.ResponseWriter, r *http.Request) {
+func (app *application) getPostHandler(w http.ResponseWriter, r *http.Request) {
 	idParam := chi.URLParam(r, "postID")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
@@ -63,8 +63,36 @@ func (app *application) GetPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	comments, err := app.store.Comments.GetByPostID(r.Context(), id)
+	if err != nil {
+		app.internalServerError(w, r, err)
+		return
+	}
+	post.Comments = comments
+
 	if err := writeJSON(w, http.StatusOK, post); err != nil {
 		app.internalServerError(w, r, err)
 	}
 
+}
+
+func (app *application) deletePostHandler(w http.ResponseWriter, r *http.Request) {
+	idParam := chi.URLParam(r, "postID")
+	id, err := strconv.ParseInt(idParam, 10, 64)
+	if err != nil {
+		app.internalServerError(w, r, err)
+		return
+	}
+
+	err = app.store.Posts.Delete(r.Context(), id)
+	if err != nil {
+		switch {
+		case errors.Is(err, store.ErrNotFound):
+			app.notFoundResponse(w, r, err)
+		default:
+			app.internalServerError(w, r, err)
+		}
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
 }
