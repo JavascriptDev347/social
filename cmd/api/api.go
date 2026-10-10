@@ -46,6 +46,9 @@ func (app *application) mount() *chi.Mux {
 				r.Get("/", app.getPostHandler)
 				r.Delete("/", app.deletePostHandler)
 				r.Patch("/", app.updatePostHandler)
+
+				// create comment
+				r.Post("/comments", app.createCommentForPostHandler)
 			})
 		})
 
