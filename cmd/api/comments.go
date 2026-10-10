@@ -7,7 +7,7 @@ import (
 )
 
 type CreateCommentPayload struct {
-	Content string `json:"content"validate:"required,max=1000"`
+	Content string `json:"content" validate:"required,max=1000"`
 }
 
 func (app *application) createCommentForPostHandler(w http.ResponseWriter, r *http.Request) {

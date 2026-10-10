@@ -10,13 +10,90 @@ import (
 )
 
 var usernames = []string{
-	"alex", "jordan", "michael", "david", "daniel", "james", "robert", "william", "chris", "matthew", "andrew", "ryan", "kevin", "brian", "jason", "ethan", "noah", "liam", "oliver", "lucas", "jack", "henry", "benjamin", "samuel", "charlie", "leo", "max", "owen", "gopher", "go_dev", "golangdev", "coder123", "devpro", "hacklab", "techwolf", "codefox", "devmaster", "programmer", "code_master", "techguy", "dev_king", "bytehunter", "codewizard", "ninja_dev", "cyberfox", "pixelmaster", "darkcoder", "webmaster", "programming", "developer"}
+	"maya", "elliot", "nora", "caleb", "ivy", "felix", "luna", "theo", "zara", "miles",
+	"aria", "jasper", "ruby", "silas", "clara", "dylan", "freya", "hugo", "iris", "kai",
+	"lena", "mason", "nina", "oscar", "piper", "quinn", "rhea", "sean", "tessa", "victor",
+	"gopher_tom", "nil_pointer", "chan_master", "goroutine_gal", "defer_dan", "slice_sam",
+	"mutex_mike", "panic_at_dawn", "byte_baker", "stack_trace", "heap_hero", "null_ninja",
+	"debug_duck", "commit_carl", "merge_mia", "rebase_rex", "binary_bob", "kernel_kate",
+	"socket_sid", "cache_cat",
+}
 
-var titles = []string{"The Future of AI", "How the Internet Works", "Why Planes Can Fly", "The Secret of Black Holes", "How GPS Finds You", "Why We Dream", "The Science of Sleep", "How Credit Cards Work", "Inside a Nuclear Reactor", "How Rockets Land", "The Mystery of Time", "How Wi-Fi Works", "Why the Sky Is Blue", "How Electric Cars Work", "The Secret of QR Codes", "How Your Brain Learns", "Why Ships Don't Sink", "How Refrigerators Work", "The Science Behind Rain", "How Satellites Stay in Orbit"}
-var contents = []string{"A strange discovery changed everything.", "Nobody expected this to happen.", "Here is what actually happens behind the scenes.", "This simple idea is more powerful than it looks.", "The science behind this is surprisingly simple.", "You use this every day without knowing how it works.", "This invention completely changed the world.", "There is a hidden system working inside it.", "Most people have never thought about this.", "Here is the secret nobody tells you.", "It looks simple, but the technology is incredible.", "One tiny mistake can cause a huge problem.", "This is how engineers solved the impossible.", "The answer is hiding in plain sight.", "What happens next is surprisingly clever.", "This everyday object has a fascinating story.", "Scientists discovered something unexpected.", "The technology behind this is everywhere.", "It took years to figure this out.", "Now you finally know how it works."}
+var titles = []string{
+	"What Really Happens When You Press a Key",
+	"Inside the Machine That Keeps Time",
+	"The Hidden Physics of Flight",
+	"How Your Phone Knows Where You Are",
+	"Why Bridges Don't Fall Down",
+	"The Strange Math Behind Compression",
+	"How a Microwave Heats Food",
+	"What Happens When You Type a URL",
+	"The Engineering of a Skyscraper",
+	"How Noise-Cancelling Headphones Work",
+	"The Secret Life of a Hard Drive",
+	"Why Batteries Slowly Die",
+	"How Touch Screens Feel Your Finger",
+	"The Truth About Cloud Storage",
+	"How Elevators Stay Safe",
+	"What Makes a Lightbulb Glow",
+	"How Submarines Dive and Surface",
+	"The Science of Fingerprint Scanners",
+	"How Airplanes Navigate Over the Ocean",
+	"Why Your Fridge Hums at Night",
+}
 
-var tags = []string{"technology", "science", "howitworks", "engineering", "facts", "education", "interestingfacts", "didyouknow", "explained", "technologyexplained", "scienceexplained", "engineeringexplained", "curiosity", "knowledge", "innovation", "inventions", "learning", "educational", "viral", "shorts"}
-var comments = []string{"This is actually fascinating!", "I never knew this worked like that.", "The technology behind this is crazy.", "Why did nobody explain this before?", "That makes so much sense now.", "I learned something new today.", "The more you know!", "This is way more complicated than I thought.", "Mind blown 🤯", "I need to see how this works in real life.", "Science is amazing.", "That explanation was actually really clear.", "I had no idea about this.", "Now I can't stop thinking about it.", "This deserves way more views.", "The engineering behind this is incredible.", "Wait... so THAT'S how it works?", "I use this every day and never knew this.", "Okay, that's actually pretty cool.", "Part 2 please!"}
+var contents = []string{
+	"One small detail explains the whole thing.",
+	"The real mechanism is far simpler than you would guess.",
+	"Engineers spent decades getting this right.",
+	"Most people walk past this every single day.",
+	"Behind the scenes, a clever trick does all the work.",
+	"It seems like magic until you see the parts.",
+	"A single design choice made all the difference.",
+	"This idea started as a happy accident.",
+	"The trick is hiding where nobody looks.",
+	"Break it down, and it makes perfect sense.",
+	"What looks complicated is just simple steps stacked together.",
+	"The history of this invention is wilder than expected.",
+	"Without this, modern life would grind to a halt.",
+	"It works because of one elegant principle.",
+	"Here is the part that textbooks usually skip.",
+	"A tiny component carries most of the load.",
+	"The solution was obvious only after someone found it.",
+	"Think of it as a chain reaction with a purpose.",
+	"This is the quiet technology you rely on constantly.",
+	"Once you see it, you cannot unsee it.",
+}
+
+var tags = []string{
+	"tech", "sciencefacts", "explainer", "engineeringlife", "mechanics", "stem",
+	"funfacts", "behindthescenes", "deepdive", "curious", "inventions", "physics",
+	"gadgets", "futuretech", "learneveryday", "mindblown", "howthingswork",
+	"smartliving", "discovery", "shortsvideo",
+}
+
+var comments = []string{
+	"Great breakdown, this finally clicked for me.",
+	"I have wondered about this for years.",
+	"Honestly one of the clearest explanations I have seen.",
+	"Never thought about it this way before.",
+	"Please do a follow-up on this topic!",
+	"Wow, engineers are on another level.",
+	"I am going to send this to my whole class.",
+	"This channel keeps getting better.",
+	"So that is why it behaves like that!",
+	"Simple, clear, and actually interesting.",
+	"My brain just did a little flip 🤯",
+	"I wish my teachers explained things like this.",
+	"Can you cover how the next step works too?",
+	"Learned more in one minute than in a whole lecture.",
+	"This changes how I look at everyday stuff.",
+	"Underrated content, more people need to see this.",
+	"Okay, that was genuinely clever.",
+	"I rewatched this twice, so good.",
+	"The visuals made it so easy to follow.",
+	"Subscribed just for explanations like this.",
+}
 
 func Seed(store store.Storage) {
 	ctx := context.Background()
