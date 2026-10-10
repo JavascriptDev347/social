@@ -20,3 +20,7 @@ migrate-down:
 .PHONY: migrate-drop
 migrate-drop:
 	@migrate -path $(MIGRATION_DIR) -database "$(DB_MIGRATOR_ADDR)" drop -f
+
+.PHONY: seed
+seed:
+	@go run cmd/migrate/seed/main.go

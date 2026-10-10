@@ -40,7 +40,7 @@ func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request
 	}
 
 	ctx := r.Context()
-	err := app.store.Posts.Create(ctx, post)
+	err := app.store.Post.Create(ctx, post)
 	if err != nil {
 		app.internalServerError(w, r, err)
 
@@ -76,7 +76,7 @@ func (app *application) deletePostHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	err = app.store.Posts.Delete(r.Context(), id)
+	err = app.store.Post.Delete(r.Context(), id)
 	if err != nil {
 		switch {
 		case errors.Is(err, store.ErrNotFound):
@@ -116,7 +116,7 @@ func (app *application) updatePostHandler(w http.ResponseWriter, r *http.Request
 		post.Title = *payload.Title
 	}
 
-	if err := app.store.Posts.Update(r.Context(), post); err != nil {
+	if err := app.store.Post.Update(r.Context(), post); err != nil {
 		app.internalServerError(w, r, err)
 		return
 	}
@@ -138,7 +138,7 @@ func (app *application) postContextMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		post, err := app.store.Posts.GetByID(ctx, id)
+		post, err := app.store.Post.GetByID(ctx, id)
 		if err != nil {
 			switch {
 			case errors.Is(err, store.ErrNotFound):
