@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -8,6 +9,7 @@ import (
 	"github.com/JavascriptDev347/social.git/internal/store"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 type application struct {
@@ -37,6 +39,10 @@ func (app *application) mount() *chi.Mux {
 	r.Use(middleware.Timeout(60 * time.Second))
 	// r.Group()
 	r.Route("/v1", func(r chi.Router) {
+		docsUrl := fmt.Sprintf("%s/swagger/doc.json", app.config.addr)
+		r.Get("/swagger/*", httpSwagger.Handler(
+			httpSwagger.URL(docsUrl), //The url pointing to API definition
+		))
 		r.Get("/health", app.healthHandler)
 
 		r.Route("/posts", func(r chi.Router) {
@@ -76,6 +82,8 @@ func (app *application) mount() *chi.Mux {
 
 func (app *application) run(mux *chi.Mux) error {
 
+	// Docs
+	docs
 	src := &http.Server{
 		Addr:         app.config.addr,
 		Handler:      mux,

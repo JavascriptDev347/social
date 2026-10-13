@@ -25,5 +25,8 @@ migrate-drop:
 seed:
 	@go run cmd/migrate/seed/main.go
 
+.PHONY: gen-docs
+gen-docs:
+	@swag init -g ./api/main.go -d cmd,internal && swag fmt
 
 # dirty problem solve: migrate -path ./cmd/migrate/migrations -database "postgres://postgres:postgres@localhost:5432/social?sslmode=disable" force 6
