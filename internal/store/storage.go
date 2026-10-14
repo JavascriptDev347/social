@@ -10,6 +10,8 @@ import (
 var (
 	ErrNotFound          = errors.New("Resource not found")
 	ErrConflict          = errors.New("Resource already exists")
+	ErrDublicateEmail    = errors.New("Email duplicate")
+	ErrDublicateUsername = errors.New("Username duplicate")
 	QueryTimeoutDuration = time.Second * 5
 )
 
@@ -23,8 +25,9 @@ type Storage struct {
 	}
 
 	User interface {
-		Create(context.Context, *User) error
+		Create(context.Context, *sql.Tx, *User) error
 		GetByID(context.Context, int64) (*User, error)
+		CreateAndInvite(ctx context.Context, user *User, token string, invitationExp time.Duration) error
 	}
 
 	Comments interface {
@@ -46,4 +49,16 @@ func NewStorage(db *sql.DB) Storage {
 		Comments:  &CommentStore{db: db},
 		Followers: &FollowerStore{db: db},
 	}
+}
+
+func withTX(db *sql.DB, ctx context.Context, fn func(*sql.Tx) error) error {
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	if err := fn(tx); err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+	return tx.Commit()
 }

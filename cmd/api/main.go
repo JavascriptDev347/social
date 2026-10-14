@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/JavascriptDev347/social.git/internal/db"
 	"github.com/JavascriptDev347/social.git/internal/env"
@@ -32,13 +33,16 @@ func main() {
 
 	cfg := config{
 		addr:        env.GetString("ADDR", ":8080"),
-		apiURL:      env.GetString("EXTERNAL_URL", "localhost://8080"),
+		apiURL:      env.GetString("EXTERNAL_URL", "localhost:8080"),
 		frontendURL: env.GetString("FRONTEND_URL", "http://localhost:5173"),
 		dbConfig: dbConfig{
 			addr:         env.GetString("DB_ADDR", "postgres://postgres:postgres@localhost/social?sslmode=disable"),
 			maxOpenConns: env.GetInt("DB_MAX_OPEN_CONNS", 30),
 			maxIdleConns: env.GetInt("DB_MAX_IDLE_CONNS", 30),
 			maxIdleTime:  env.GetString("DB_MAX_IDLE_TIME", "15m"),
+		},
+		mail: mailConfig{
+			exp: time.Hour * 24 * 3, //3 days
 		},
 	}
 

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -25,6 +24,11 @@ type config struct {
 	dbConfig    dbConfig
 	apiURL      string
 	frontendURL string
+	mail        mailConfig
+}
+
+type mailConfig struct {
+	exp time.Duration
 }
 
 type dbConfig struct {
@@ -53,9 +57,10 @@ func (app *application) mount() *chi.Mux {
 	r.Use(middleware.Timeout(60 * time.Second))
 	// r.Group()
 	r.Route("/v1", func(r chi.Router) {
-		docsUrl := fmt.Sprintf("%s/swagger/doc.json", app.config.addr)
+		// Relative so the browser resolves it against the current host,
+		// which works in both local dev and deployed environments.
 		r.Get("/swagger/*", httpSwagger.Handler(
-			httpSwagger.URL(docsUrl), //The url pointing to API definition
+			httpSwagger.URL("/v1/swagger/doc.json"), //The url pointing to API definition
 		))
 		r.Get("/health", app.healthHandler)
 
@@ -85,6 +90,11 @@ func (app *application) mount() *chi.Mux {
 
 			r.Group(func(r chi.Router) {
 				r.Get("/feed", app.getUserFeedHandler)
+			})
+
+			// public rousetes
+			r.Route("/authentication", func(r chi.Router) {
+				r.Post("/user", app.registerUserHandler)
 			})
 		})
 

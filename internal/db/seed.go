@@ -100,7 +100,8 @@ func Seed(store store.Storage) {
 
 	users := generateUsers(100)
 	for _, user := range users {
-		if err := store.User.Create(ctx, user); err != nil {
+		// nil tx: Create runs on the store's own *sql.DB handle.
+		if err := store.User.Create(ctx, nil, user); err != nil {
 			log.Println("Error creating user")
 		}
 	}
@@ -129,7 +130,11 @@ func generateUsers(num int) []*store.User {
 		users[i] = &store.User{
 			Username: usernames[i%len(usernames)] + fmt.Sprintf("%d", i),
 			Email:    usernames[i%len(usernames)] + fmt.Sprintf("%d", i) + "@example.com",
-			Password: "123321",
+		}
+
+		// Password is hashed through Set, its fields are unexported.
+		if err := users[i].Password.Set("123321"); err != nil {
+			log.Println("Error setting user password")
 		}
 	}
 	return users
