@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -10,18 +9,22 @@ import (
 	"github.com/JavascriptDev347/social.git/internal/store"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	httpSwagger "github.com/swaggo/http-swagger"
+	"go.uber.org/zap"
 )
 
 type application struct {
 	config config
 	store  store.Storage
+	logger *zap.SugaredLogger
 }
 
 type config struct {
-	addr     string
-	dbConfig dbConfig
-	apiURL   string
+	addr        string
+	dbConfig    dbConfig
+	apiURL      string
+	frontendURL string
 }
 
 type dbConfig struct {
@@ -37,6 +40,15 @@ func (app *application) mount() *chi.Mux {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
 
 	r.Use(middleware.Timeout(60 * time.Second))
 	// r.Group()
@@ -96,6 +108,6 @@ func (app *application) run(mux *chi.Mux) error {
 		ReadTimeout:  time.Second * 10,
 		IdleTimeout:  time.Minute,
 	}
-	log.Printf("Server has started at %s", app.config.addr)
+	app.logger.Infow("Server has started at %s", "addr", app.config.addr)
 	return src.ListenAndServe()
 }

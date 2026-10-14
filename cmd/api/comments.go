@@ -10,6 +10,21 @@ type CreateCommentPayload struct {
 	Content string `json:"content" validate:"required,max=1000"`
 }
 
+// CreateComment godoc
+//
+//	@Summary		Creates a comment on a post
+//	@Description	Creates a comment on the post with the given ID
+//	@Tags			comments
+//	@Accept			json
+//	@Produce		json
+//	@Param			id		path		int						true	"Post ID"
+//	@Param			payload	body		CreateCommentPayload	true	"Comment content"
+//	@Success		201		{object}	store.Comment
+//	@Failure		400		{object}	error
+//	@Failure		404		{object}	error
+//	@Failure		500		{object}	error
+//	@Security		ApiKeyAuth
+//	@Router			/posts/{id}/comments [post]
 func (app *application) createCommentForPostHandler(w http.ResponseWriter, r *http.Request) {
 	var payload CreateCommentPayload
 	var userID int64 = 1

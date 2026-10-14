@@ -39,6 +39,22 @@ type FollowUser struct {
 	UserID int64 `json:"user_id"`
 }
 
+// FollowUser godoc
+//
+//	@Summary		Follows a user
+//	@Description	Makes the user in the path follow the user in the payload
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Param			id		path	int			true	"User ID"
+//	@Param			payload	body	FollowUser	true	"User to follow"
+//	@Success		204		"No Content"
+//	@Failure		400		{object}	error
+//	@Failure		404		{object}	error
+//	@Failure		409		{object}	error
+//	@Failure		500		{object}	error
+//	@Security		ApiKeyAuth
+//	@Router			/users/{id}/follow [put]
 func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request) {
 	followerUser := app.getUserFromCtx(r)
 	var payload FollowUser
@@ -65,6 +81,21 @@ func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request
 	}
 }
 
+// UnfollowUser godoc
+//
+//	@Summary		Unfollows a user
+//	@Description	Makes the user in the path unfollow the user in the payload
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Param			id		path	int			true	"User ID"
+//	@Param			payload	body	FollowUser	true	"User to unfollow"
+//	@Success		204		"No Content"
+//	@Failure		400		{object}	error
+//	@Failure		404		{object}	error
+//	@Failure		500		{object}	error
+//	@Security		ApiKeyAuth
+//	@Router			/users/{id}/unfollow [put]
 func (app *application) unfollowUserHandler(w http.ResponseWriter, r *http.Request) {
 	unfollowedUser := app.getUserFromCtx(r)
 	var payload FollowUser
