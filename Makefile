@@ -27,6 +27,6 @@ seed:
 
 .PHONY: gen-docs
 gen-docs:
-	@swag init -g ./api/main.go -d cmd,internal && swag fmt
+	@swag init -g ./api/main.go -d cmd,internal --parseGoList=false && swag fmt
 
 # dirty problem solve: migrate -path ./cmd/migrate/migrations -database "postgres://postgres:postgres@localhost:5432/social?sslmode=disable" force 6

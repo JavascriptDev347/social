@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/JavascriptDev347/social.git/docs"
 	"github.com/JavascriptDev347/social.git/internal/store"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -20,6 +21,7 @@ type application struct {
 type config struct {
 	addr     string
 	dbConfig dbConfig
+	apiURL   string
 }
 
 type dbConfig struct {
@@ -83,7 +85,10 @@ func (app *application) mount() *chi.Mux {
 func (app *application) run(mux *chi.Mux) error {
 
 	// Docs
-	docs
+	docs.SwaggerInfo.Version = version
+	docs.SwaggerInfo.Host = app.config.apiURL
+	docs.SwaggerInfo.BasePath = "/v1"
+
 	src := &http.Server{
 		Addr:         app.config.addr,
 		Handler:      mux,

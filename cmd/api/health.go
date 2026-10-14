@@ -4,8 +4,6 @@ import (
 	"net/http"
 )
 
-var version string = "0.0.1"
-
 func (app *application) healthHandler(w http.ResponseWriter, r *http.Request) {
 
 	data := map[string]string{
