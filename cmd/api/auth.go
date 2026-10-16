@@ -15,11 +15,23 @@ type RegisterUserPayload struct {
 	Password string `json:"password" validate:"required,min=3,max=72"`
 }
 
+// registerUserHandler godoc
+//
+//	@Summary		Registers a user
+//	@Description	Registers a user and creates an invitation token
+//	@Tags			authentication
+//	@Accept			json
+//	@Produce		json
+//	@Param			payload	body		RegisterUserPayload	true	"User credentials"
+//	@Success		201		{object}	store.User			"User registered"
+//	@Failure		400		{object}	error
+//	@Failure		500		{object}	error
+//	@Router			/authentication/user [post]
 func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	var payload RegisterUserPayload
 
-	if err := readJSON(w, r, payload); err != nil {
+	if err := readJSON(w, r, &payload); err != nil {
 		app.badRequestResponse(w, r, err)
 		return
 	}
@@ -45,6 +57,7 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 	hash := sha256.Sum256([]byte(plainToken))
 	hashToken := hex.EncodeToString(hash[:])
 	err := app.store.User.CreateAndInvite(ctx, user, hashToken, app.config.mail.exp)
+
 	if err != nil {
 		switch err {
 		case store.ErrDublicateEmail:

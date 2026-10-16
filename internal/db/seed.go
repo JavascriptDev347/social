@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log"
 	"math/rand"
@@ -95,21 +96,25 @@ var comments = []string{
 	"Subscribed just for explanations like this.",
 }
 
-func Seed(store store.Storage) {
+func Seed(store store.Storage, db *sql.DB) {
 	ctx := context.Background()
-
+	tx, _ := db.BeginTx(ctx, nil)
 	users := generateUsers(100)
 	for _, user := range users {
 		// nil tx: Create runs on the store's own *sql.DB handle.
-		if err := store.User.Create(ctx, nil, user); err != nil {
+		if err := store.User.Create(ctx, tx, user); err != nil {
+			tx.Rollback()
 			log.Println("Error creating user")
+			return
 		}
 	}
+	tx.Commit()
 
 	posts := generatePosts(200, users)
 	for _, post := range posts {
 		if err := store.Post.Create(ctx, post); err != nil {
 			log.Println("Error creating post")
+			return
 		}
 	}
 
@@ -117,6 +122,7 @@ func Seed(store store.Storage) {
 	for _, comment := range comments {
 		if err := store.Comments.Create(ctx, comment); err != nil {
 			log.Println("Error creating comment")
+			return
 		}
 	}
 

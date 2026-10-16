@@ -91,11 +91,10 @@ func (app *application) mount() *chi.Mux {
 			r.Group(func(r chi.Router) {
 				r.Get("/feed", app.getUserFeedHandler)
 			})
-
-			// public rousetes
-			r.Route("/authentication", func(r chi.Router) {
-				r.Post("/user", app.registerUserHandler)
-			})
+		})
+		// public rousetes
+		r.Route("/authentication", func(r chi.Router) {
+			r.Post("/user", app.registerUserHandler)
 		})
 
 	})
